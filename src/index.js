@@ -45,6 +45,27 @@ function render(element, container) {
   container.appendChild(dom);
 }
 
+let nextUnitOfWork = null;
+
+function workLoop(deadline) {
+  let shouldYield = false;
+
+  while (nextUnitOfWork && !shouldYield) {
+    nextUnitOfWork = performUnitOfWork();
+
+    shouldYield = deadline.timeRemaining() < 1;
+  }
+
+  requestIdleCallback(workLoop);
+}
+
+function performUnitOfWork() {
+  // do some work
+  // return the next unit of work
+}
+
+requestIdleCallback(workLoop);
+
 /** @jsx MyReact.createElement */
 const element = (
   <div style="background: orange; color:white;">
